@@ -83,5 +83,13 @@ async def liturgia(interaction: discord.Interaction):
 
     await interaction.followup.send(embed=embed)
 
-bot.run("TOKEN")
+import os
+
+TOKEN = os.getenv("TOKEN")
+
+if TOKEN is None:
+    print("Token não encontrado!")
+else:
+    bot.run(TOKEN)
+
 
