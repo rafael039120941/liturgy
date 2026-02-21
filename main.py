@@ -59,7 +59,7 @@ embed = discord.Embed(
 )
 
     # Primeira Leitura
-    embed.add_field(
+        embed.add_field(
         name=f"{dados['primeiraLeitura']['titulo']} ({dados['primeiraLeitura']['referencia']})",
         value=dados['primeiraLeitura']['texto'][:1000],
         inline=False
@@ -91,4 +91,5 @@ if TOKEN is None:
     print("Token não encontrado!")
 else:
     bot.run(TOKEN)
+
 
