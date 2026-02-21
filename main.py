@@ -19,19 +19,6 @@ class Liturgia(discord.Client):
 
 bot = Liturgia()
 
-@bot.tree.command(name="olá-mundo",description="Primeiro comando do Bot")
-async def olamundo(interaction:discord.Interaction):
-    await interaction.response.send_message(f"Olá {interaction.user.mention}!")
-
-@bot.tree.command(name="soma",description="Some dois números distintos")
-@app_commands.describe(
-    numero1="Primeiro numero a somar",
-    numero2="Segundo número a somar"
-)
-async def olamundo(interaction:discord.Interaction,numero1:int,numero2:int):
-    numero_somado = numero1 + numero2
-    await interaction.response.send_message(f"O numero somado é {numero_somado}.",ephemeral=True)
-
 async def buscar_liturgia():
     url = "https://liturgia.up.railway.app/"
 
@@ -52,11 +39,24 @@ async def liturgia(interaction: discord.Interaction):
         await interaction.followup.send("❌ Não consegui buscar a liturgia.")
         return
 
-    embed = discord.Embed(
-        title=f"📖 Liturgia do Dia - {dados['data']}",
-        description=f"**{dados['liturgia']}**\nCor: {dados['cor']}",
-        color=discord.Color.purple() if dados['cor'].lower() == "roxo" else discord.Color.green()
-    )
+ # Mapeamento das cores litúrgicas
+cores_liturgicas = {
+    "roxo": discord.Color.purple(),
+    "verde": discord.Color.green(),
+    "vermelho": discord.Color.red(),
+    "branco": discord.Color.light_grey(),
+    "rosa": discord.Color.from_rgb(255, 105, 180),  # rosa personalizado
+    "preto": discord.Color.dark_grey()
+}
+
+# Pega a cor correta ou usa padrão caso não encontre
+cor_embed = cores_liturgicas.get(dados['cor'].lower(), discord.Color.blue())
+
+embed = discord.Embed(
+    title=f"📖 Liturgia do Dia - {dados['data']}",
+    description=f"**{dados['liturgia']}**\nCor litúrgica: {dados['cor']}",
+    color=cor_embed
+)
 
     # Primeira Leitura
     embed.add_field(
@@ -79,7 +79,7 @@ async def liturgia(interaction: discord.Interaction):
         inline=False
     )
 
-    embed.set_footer(text="Liturgia diária automática ✨")
+    embed.set_footer(text="Doctrina Verbi")
 
     await interaction.followup.send(embed=embed)
 
@@ -91,5 +91,4 @@ if TOKEN is None:
     print("Token não encontrado!")
 else:
     bot.run(TOKEN)
-
 
